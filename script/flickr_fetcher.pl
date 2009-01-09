@@ -49,7 +49,7 @@ sub BUILD {
         }
     }
 
-    my $xs = XML::Simple->new( KeepRoot => 1, keyattr => [] );
+    my $xs = XML::Simple->new( KeepRoot => 1, keyattr => [], ForceArray => ['photo'] );
     my $parser = WebService::Simple::Parser::XML::Simple->new( xs => $xs );
     my $flickr = WebService::Simple->new(
         base_url        => "http://api.flickr.com/services/rest/",
@@ -76,7 +76,7 @@ sub run {
 }
 
 sub search {
-    my ( $self, $keyword, $page , $perpage) = @_;
+    my ( $self, $keyword, $page, $perpage ) = @_;
     my $response = $self->_flickr->get(
         {
             method   => "flickr.photos.search",
@@ -84,12 +84,12 @@ sub search {
             per_page => $perpage,
             sort     => 'date-posted-desc',
             extras   => 'date_upload',
-	    page  => $page,
-            license => $self->license || "",
+            page     => $page,
+            license  => $self->license || "",
         }
     );
     my $xml = $response->parse_response;
-    $self->fetch($xml->{rsp}->{photos}->{photo});
+    $self->fetch( $xml->{rsp}->{photos}->{photo} );
 }
 
 sub fetch {
