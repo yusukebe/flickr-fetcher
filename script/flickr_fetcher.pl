@@ -21,7 +21,7 @@ our $VERSION = '0.01';
 with 'MooseX::Getopt';
 
 subtype 'Dir' => as 'Object' => where { $_->isa('Path::Class::Dir') };
-coerce 'Dir'  => from 'Str'  => via   { Path::Class::Dir->new($_) };
+coerce  'Dir' => from 'Str'  => via   { Path::Class::Dir->new($_) };
 
 MooseX::Getopt::OptionTypeMap->add_option_type_to_map( 'Dir' => '=s' );
 
