@@ -37,6 +37,9 @@ has '_ua' => (
     default => sub { LWP::UserAgent->new( keep_alive => 1 ) }
 );
 
+__PACKAGE__->meta->make_immutable;
+no Moose;
+
 sub BUILD {
     my ( $self, $args ) = @_;
 
@@ -58,9 +61,6 @@ sub BUILD {
     );
     $self->_flickr($flickr);
 }
-
-__PACKAGE__->meta->make_immutable;
-no Moose;
 
 sub run {
     my $self = shift;
