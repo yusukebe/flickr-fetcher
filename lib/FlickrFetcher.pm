@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 package FlickrFetcher;
 
 use Moose;
@@ -21,7 +19,7 @@ our $VERSION = '0.01';
 with 'MooseX::Getopt';
 
 subtype 'Dir' => as 'Object' => where { $_->isa('Path::Class::Dir') };
-coerce  'Dir' => from 'Str'  => via   { Path::Class::Dir->new($_) };
+coerce 'Dir'  => from 'Str'  => via   { Path::Class::Dir->new($_) };
 
 MooseX::Getopt::OptionTypeMap->add_option_type_to_map( 'Dir' => '=s' );
 
@@ -129,24 +127,29 @@ sub photo_total {
     return $xml->{rsp}->{photos}->{total};
 }
 
-package main;
-
-my $fetcher = FlickrFetcher->new_with_options();
-$fetcher->run();
+1;
 
 __END__
 
 =head1 NAME
 
-flickr_fetcher.pl - Fetch Flickr photos by keyword
+FlickrFetcher -
 
 =head1 SYNOPSIS
 
-./flickr_fetcher.pl --keyword hoge --dir hoge --api_key yourflickrapikey
+  use FlickrFetcher;
+  my $fetcher = FlickrFetcher->new_with_options();
+  $fetcher->run();
+
+=head1 DESCRIPTION
+
+FlickrFetcher is
 
 =head1 AUTHOR
 
-Yusuke Wada E<lt>yusuke (at) kamawada.comE<gt>
+Yusuke Wada E<lt>yusuke at kamawada.comE<gt>
+
+=head1 SEE ALSO
 
 =head1 LICENSE
 
@@ -154,4 +157,3 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
-
