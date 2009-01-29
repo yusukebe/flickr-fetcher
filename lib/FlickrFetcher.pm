@@ -35,6 +35,11 @@ has '_ua' => (
     default => sub { LWP::UserAgent->new( keep_alive => 1 ) }
 );
 
+before run => sub {
+    my $self = shift;
+    mkdir $self->dir->relative if !-d $self->dir->is_absolute;
+};
+
 __PACKAGE__->meta->make_immutable;
 no Moose;
 
@@ -62,7 +67,6 @@ sub BUILD {
 
 sub run {
     my $self = shift;
-    mkdir $self->dir->relative if !-d $self->dir->is_absolute;
     say "search keyword : " . $self->keyword;
     my $photo_total = $self->photo_total( $self->keyword );
     say "total count : " . $photo_total;
