@@ -63,6 +63,7 @@ sub BUILD {
         response_parser => $parser,
     );
     $self->_flickr($flickr);
+
 }
 
 sub run {
