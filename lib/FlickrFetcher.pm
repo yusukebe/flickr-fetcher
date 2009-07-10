@@ -12,7 +12,6 @@ use POSIX qw(ceil);
 use WebService::Simple;
 use WebService::Simple::Parser::XML::Simple;
 use XML::Simple;
-use Perl6::Say;
 
 our $VERSION = '0.01';
 
@@ -68,12 +67,12 @@ sub BUILD {
 
 sub run {
     my $self = shift;
-    say "search keyword : " . $self->keyword;
+    warn "search keyword : " . $self->keyword . "\n";
     my $photo_total = $self->photo_total( $self->keyword );
-    say "total count : " . $photo_total;
+    warn "total count : " . $photo_total . "\n";
     my $pages = ceil( $photo_total / $self->_perpage );
     for my $current_page ( 1 .. $pages ) {
-        say "search page : $current_page";
+        warn "search page : $current_page\n";
         $self->search( $self->keyword, $current_page, $self->_perpage );
     }
 }
@@ -100,8 +99,8 @@ sub fetch {
     for my $photo ( @$photo_ref ){
         my $url  = $self->photo_url( $photo->{id} );
         my $file = $self->dir->file( md5_hex($url) . ".jpg" );
-        my $res  = $self->_ua->mirror( $url, $file );
-        say "try to fetch : " . $res->status_line . " : $url";
+        my $res  = $self->_ua->get( $url, ':content_file' => $file->stringify );
+        warn "try to fetch : " . $res->status_line . " : $url\n";
     }
 }
 
