@@ -4,6 +4,10 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use Params::Coerce ();
 
+use Coro::LWP;
+use Coro;
+use Coro::AnyEvent;
+
 use Digest::MD5 qw(md5_hex);
 use Encode;
 use LWP::UserAgent;
@@ -96,12 +100,16 @@ sub search {
 
 sub fetch {
     my ( $self, $photo_ref ) = @_;
+    my @pids;
     for my $photo ( @$photo_ref ){
         my $url  = $self->photo_url( $photo->{id} );
         my $file = $self->dir->file( md5_hex($url) . ".jpg" );
-        my $res  = $self->_ua->get( $url, ':content_file' => $file->stringify );
-        warn "try to fetch : " . $res->status_line . " : $url\n";
+        push( @pids, async {
+            my $res  = $self->_ua->get( $url, ':content_file' => $file->stringify );
+            warn "try to fetch : " . $res->status_line . " : $url\n";
+        } );
     }
+    $_->join for @pids;
 }
 
 sub photo_url {
